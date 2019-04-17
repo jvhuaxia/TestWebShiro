@@ -1,0 +1,35 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jvhuaxia.dao.RoleDao">
+  <resultMap id="BaseResultMap" type="com.jvhuaxia.pojo.Role">
+    <id property="id" column="role_id"/>
+    <result property="name" column="role_name"/>
+    <result property="note" column="role_note"/>
+    <collection property="permissions" select="com.jvhuaxia.dao.PermissionDao.selectByRole"
+      column="role_id"/>
+  </resultMap>
+  <insert id="insertOne" parameterType="com.jvhuaxia.pojo.Role">
+    INSERT INTO static_role (role_id, role_name, role_note)
+    VALUES (#{role.id}, #{role.name}, #{role.note});
+  </insert>
+
+  <select id="selectOne" resultMap="BaseResultMap" parameterType="int">
+    SELECT *
+    FROM static_role
+    WHERE role_id = #{id}
+  </select>
+
+  <select id="selectByUser" resultMap="BaseResultMap" parameterType="String">
+    SELECT static_role.role_id, role_name, role_note
+    FROM static_role,
+         static_user,
+         static_user_role
+    WHERE static_role.role_id = static_user_role.role_id
+      AND static_user.user_id = static_user_role.user_id
+      AND static_user.user_id = #{userId}
+  </select>
+
+
+</mapper>

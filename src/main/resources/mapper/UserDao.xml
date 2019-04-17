@@ -1,0 +1,30 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jvhuaxia.dao.UserDao">
+  <resultMap id="BaseResultMap" type="com.jvhuaxia.pojo.User">
+    <id property="id" column="user_id"/>
+    <result property="name" column="user_name"/>
+    <result property="password" column="user_password"/>
+    <result property="lastSignTime" column="last_sign_time"/>
+    <result property="signState" column="signstate"/>
+    <result property="tickeId" column="ticke_id"/>
+    <collection property="roles" select="com.jvhuaxia.dao.RoleDao.selectByUser" column="user_id"/>
+  </resultMap>
+
+  <select id="selectOne" parameterType="String" resultMap="BaseResultMap">
+    SELECT *
+    FROM static_user
+    WHERE user_id = #{id}
+  </select>
+  <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
+    SELECT *
+    FROM static_user
+    WHERE user_name = #{name}
+  </select>
+
+  <insert id="insertOne" parameterType="com.jvhuaxia.pojo.User">
+    INSERT INTO static_user (user_id, user_name, user_password)
+    VALUE (#{user.id}, #{user.name}, #{user.password});
+  </insert>
+</mapper>
